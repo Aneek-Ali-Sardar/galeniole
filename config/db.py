@@ -1,13 +1,17 @@
+import os
 from motor.motor_asyncio import AsyncIOMotorClient
 
-# replace <db_password> with your real password (no < > symbols)
-MONGO_URL = "mongodb+srv://admin:MGD5UbCq@cluster0.eptl4zn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+# Get MongoDB URL from Render environment variable
+MONGO_URL = os.getenv("MONGO_URL")
 
-# create a connection
+if not MONGO_URL:
+    raise ValueError("❌ MONGO_URL environment variable not set!")
+
+# Create a connection
 client = AsyncIOMotorClient(MONGO_URL)
 db = client.healthcare  # 'healthcare' will be your database name
 
-# test connection
+# Optional: test connection
 async def test_connection():
     try:
         await db.command("ping")
